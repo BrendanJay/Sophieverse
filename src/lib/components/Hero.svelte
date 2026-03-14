@@ -4,7 +4,7 @@
   import profileImage from '$lib/assets/Profile.png';
   import { scrollReveal } from '$lib/actions/scrollReveal';
 
-  let nameText = "Sache Sophie Anne Rafols";
+  let nameText = "Sophie Rafols";
   let displayedName = $state("");
   let showNickname = $state(false);
   let index = 0;

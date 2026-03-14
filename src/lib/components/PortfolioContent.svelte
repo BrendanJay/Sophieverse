@@ -93,13 +93,13 @@
           use:scrollReveal={{ delay: i * 150, origin: 'bottom' }}
         >
           <!-- Media Container -->
-          <div class="relative h-48 rounded-[1.6rem] overflow-hidden mb-4 bg-charcoal/50 group">
-            <!-- Thumbnail (Visible as fallback or until video loads) -->
+          <div class="relative h-48 rounded-[1.6rem] overflow-hidden mb-4 bg-charcoal/50 group/media">
+            <!-- Thumbnail (Always base layer) -->
             <img 
               src={game.thumbnail} 
               alt={game.name} 
-              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              onerror={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/1A1A1A/D4B6FF?text=' + game.name }}
+              class="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover/media:scale-110"
+              onerror={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/1A1A1A/D4B6FF?text=' + encodeURIComponent(game.name) }}
             />
 
             {#if game.video}
@@ -110,14 +110,13 @@
                 loop
                 muted
                 playsinline
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 z-10"
-                oncanplay={(e) => { e.currentTarget.style.opacity = '1' }}
-                style="opacity: 0; transition: opacity 0.5s;"
+                class="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover/media:scale-110 z-10 opacity-0 group-hover/media:opacity-100"
+                oncanplay={(e) => { if (e.currentTarget instanceof HTMLVideoElement) e.currentTarget.style.opacity = '1'; }}
               ></video>
             {/if}
             
             <!-- Glow Overlay on Hover -->
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover/media:opacity-100 transition-opacity duration-500 z-20"></div>
           </div>
 
           <div class="p-6 rounded-[1.8rem] bg-[var(--bg-primary)] h-full border-2 border-transparent group-hover:border-neon-purple/30 transition-colors">

@@ -16,7 +16,7 @@
     { 
       name: 'Katseye', 
       jp: 'キャッツアイ', 
-      desc: 'Debut Global Girl Group', 
+      desc: 'Touch, My Way, Debut', 
       thumbnail: '/assets/images/Katseye.png',
       video: '/assets/kpop/Katseye.mp4',
       audio: '/music/kpop/Katseye.mp3'
@@ -32,10 +32,18 @@
     { 
       name: 'TWICE', 
       jp: 'トゥワイス', 
-      desc: 'What is Love, Fancy, Feel Special', 
+      desc: 'What is Love?, Fancy, Feel Special', 
       thumbnail: '/assets/images/Twice.png',
       video: '/assets/kpop/Twice.mp4',
       audio: '/music/kpop/Twice.mp3'
+    },
+    { 
+      name: 'LE SSERAFIM', 
+      jp: 'ル・セラフィム', 
+      desc: 'Fearless, Antifragile, Unforgiven', 
+      thumbnail: '/assets/images/LeSserafim.png',
+      video: '/assets/kpop/LeSserafim.mp4',
+      audio: '/music/kpop/LeSserafim.mp3'
     }
   ];
 
@@ -112,6 +120,7 @@
               src={group.thumbnail} 
               alt={group.name} 
               class="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover/media:scale-110"
+              onerror={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/1A1A1A/D4B6FF?text=' + encodeURIComponent(group.name) }}
             />
 
             <!-- Video (Overlay on hover) -->
