@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@theme {
+  --color-charcoal: #1A1A1A;
+  --color-neon-purple: #BF95FF;
+  --color-neon-violet: #8B5CF6;
+  
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-charcoal text-white font-sans overflow-x-hidden;
+    cursor: none; /* Disable default cursor as requested */
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .neon-border {
+    @apply border border-neon-purple/50 shadow-[0_0_10px_rgba(191,149,255,0.3)];
+    transition: all 0.3s ease;
+  }
+  
+  .neon-border:hover {
+    @apply border-neon-purple shadow-[0_0_20px_rgba(191,149,255,0.6)];
+  }
+
+  .neon-text {
+    @apply text-neon-purple drop-shadow-[0_0_8px_rgba(191,149,255,0.8)];
+  }
+
+  .neon-glow-violet {
+    @apply shadow-[0_0_15px_rgba(139,92,246,0.5)];
+  }
+}
+
+/* Violet Wipe effect for links */
+.wipe-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.wipe-effect::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #8B5CF6;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-out;
+}
+
+.wipe-effect:hover::after {
+  transform: translateX(0);
+}
+
+/* Fade up animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.animate-fade-down {
+  animation: fade-in-down 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Decorative Border with animated pseudo-elements */
+.decorative-border {
+  position: relative;
+  border: 1px solid var(--color-neon-purple, #BF95FF) / 0.2;
+}
+
+.decorative-border::before,
+.decorative-border::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--color-neon-violet, #8B5CF6);
+  border-style: solid;
+  transition: all 0.4s ease;
+}
+
+.decorative-border::before {
+  top: -5px;
+  left: -5px;
+  border-width: 2px 0 0 2px;
+}
+
+.decorative-border::after {
+  bottom: -5px;
+  right: -5px;
+  border-width: 0 2px 2px 0;
+}
+
+.decorative-border:hover::before {
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+}
+
+.decorative-border:hover::after {
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+}
+
+/* Custom Cursor Styles */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out; /* Slight smooth lag */
+}
