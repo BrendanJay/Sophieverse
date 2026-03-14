@@ -2,143 +2,187 @@
 
 @theme {
   --color-charcoal: #1A1A1A;
-  --color-neon-purple: #BF95FF;
-  --color-neon-violet: #8B5CF6;
+  --color-neon-purple: #D4B6FF;
+  --color-neon-violet: #A855F7;
+  --color-pastel-pink: #FFD1DC;
+  --color-pastel-blue: #B3E5FC;
+  --color-pastel-green: #C8E6C9;
   
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-sans: "Fredoka", "M PLUS Rounded 1c", system-ui, sans-serif;
+  --font-kawaii: "M PLUS Rounded 1c", sans-serif;
 }
 
 @layer base {
+  :root {
+    --bg-primary: #1A1A1A;
+    --bg-secondary: rgba(255, 255, 255, 0.05);
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --border-color: rgba(212, 182, 255, 0.2);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+  }
+
+  :root.light {
+    --bg-primary: #FDF4FF;
+    --bg-secondary: #FFFFFF;
+    --text-primary: #4A1D96;
+    --text-secondary: #6B21A8;
+    --border-color: rgba(168, 85, 247, 0.3);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(168, 85, 247, 0.2);
+  }
+
+  /* Removed native smooth scroll for Lenis compatibility */
+  /* html { scroll-behavior: smooth; } */
+  
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+
   body {
-    @apply bg-charcoal text-white font-sans overflow-x-hidden;
-    cursor: none; /* Disable default cursor as requested */
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    @apply font-sans overflow-x-hidden transition-colors duration-500;
+    cursor: none;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neon-purple/40 rounded-full border-2 transition-colors;
+    border-color: var(--bg-primary);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-neon-purple/70;
   }
 }
 
 @layer components {
   .glass {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    @apply rounded-[2rem];
   }
   
-  .neon-border {
-    @apply border border-neon-purple/50 shadow-[0_0_10px_rgba(191,149,255,0.3)];
-    transition: all 0.3s ease;
-  }
-  
-  .neon-border:hover {
-    @apply border-neon-purple shadow-[0_0_20px_rgba(191,149,255,0.6)];
+  .kawaii-glow {
+    @apply shadow-[0_0_20px_rgba(212,182,255,0.4)];
   }
 
   .neon-text {
-    @apply text-neon-purple drop-shadow-[0_0_8px_rgba(191,149,255,0.8)];
+    @apply text-neon-purple drop-shadow-[0_0_8px_rgba(212,182,255,0.6)];
   }
 
-  .neon-glow-violet {
-    @apply shadow-[0_0_15px_rgba(139,92,246,0.5)];
+  .kawaii-card {
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    @apply rounded-[2.5rem] transition-all duration-500;
   }
-}
 
-/* Violet Wipe effect for links */
-.wipe-effect {
-  position: relative;
-  overflow: hidden;
-}
-
-.wipe-effect::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #8B5CF6;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease-out;
-}
-
-.wipe-effect:hover::after {
-  transform: translateX(0);
-}
-
-/* Fade up animation */
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .kawaii-card:hover {
+    border-color: var(--color-neon-purple);
+    @apply scale-[1.02] shadow-[0_15px_40px_rgba(212,182,255,0.25)];
   }
 }
 
-@keyframes fade-in-down {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Scroll reveal classes */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.animate-fade-up {
-  animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.animate-fade-down {
-  animation: fade-in-down 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-/* Decorative Border with animated pseudo-elements */
+/* Decorative Border with Sparkles */
 .decorative-border {
   position: relative;
-  border: 1px solid var(--color-neon-purple, #BF95FF) / 0.2;
 }
 
 .decorative-border::before,
 .decorative-border::after {
-  content: '';
+  content: '✨';
   position: absolute;
-  width: 20px;
-  height: 20px;
-  border-color: var(--color-neon-violet, #8B5CF6);
-  border-style: solid;
+  font-size: 1.2rem;
+  opacity: 0;
   transition: all 0.4s ease;
 }
 
-.decorative-border::before {
-  top: -5px;
-  left: -5px;
-  border-width: 2px 0 0 2px;
-}
+.decorative-border::before { top: -10px; left: -10px; }
+.decorative-border::after { bottom: -10px; right: -10px; }
 
-.decorative-border::after {
-  bottom: -5px;
-  right: -5px;
-  border-width: 0 2px 2px 0;
-}
-
-.decorative-border:hover::before {
-  width: calc(100% + 8px);
-  height: calc(100% + 8px);
-}
-
+.decorative-border:hover::before,
 .decorative-border:hover::after {
-  width: calc(100% + 8px);
-  height: calc(100% + 8px);
+  opacity: 1;
+  transform: scale(1.2) rotate(20deg);
 }
 
-/* Custom Cursor Styles */
+/* Custom Cursor */
 .custom-cursor {
   position: fixed;
   top: 0;
   left: 0;
-  width: 40px;
-  height: 40px;
   pointer-events: none;
   z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s ease-out; /* Slight smooth lag */
+  transition: transform 0.1s ease-out;
 }
+
+/* Katakana Labels Styles */
+.jp-label {
+  @apply text-[10px] uppercase tracking-widest font-kawaii block mb-1;
+  color: var(--text-secondary);
+}
+
+/* Link animations */
+.kawaii-link {
+  @apply relative overflow-hidden transition-colors;
+}
+
+.kawaii-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-full h-0.5 bg-neon-purple scale-x-0 origin-left transition-transform duration-300;
+}
+
+.kawaii-link:hover::after {
+  @apply scale-x-100;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+/* Fade up animation */

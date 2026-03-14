@@ -3,7 +3,7 @@
 
   let canvas: HTMLCanvasElement;
 
-  class Petal {
+  class Particle {
     x: number;
     y: number;
     size: number;
@@ -14,18 +14,22 @@
     opacity: number;
     width: number;
     height: number;
+    type: 'petal' | 'sparkle';
+    color: string;
 
     constructor(width: number, height: number) {
       this.width = width;
       this.height = height;
       this.x = Math.random() * width;
       this.y = Math.random() * height - height;
-      this.size = Math.random() * 10 + 5;
+      this.size = Math.random() * 8 + 4;
       this.speedY = Math.random() * 1 + 0.5;
       this.speedX = Math.random() * 1 - 0.5;
       this.rotation = Math.random() * 360;
       this.rotationSpeed = Math.random() * 1 - 0.5;
-      this.opacity = Math.random() * 0.5 + 0.2;
+      this.opacity = Math.random() * 0.4 + 0.1;
+      this.type = Math.random() > 0.7 ? 'sparkle' : 'petal';
+      this.color = this.type === 'sparkle' ? '#FFF' : '#D4B6FF';
     }
 
     update() {
@@ -45,12 +49,42 @@
       ctx.rotate((this.rotation * Math.PI) / 180);
       ctx.globalAlpha = this.opacity;
       
-      // Draw a simple petal shape (ellipse-like)
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.bezierCurveTo(-this.size/2, -this.size, this.size/2, -this.size, 0, 0);
-      ctx.fillStyle = '#BF95FF'; // Neon purple petal
-      ctx.fill();
+      if (this.type === 'petal') {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(-this.size/2, -this.size, this.size/2, -this.size, 0, 0);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      } else {
+        // Star/Sparkle shape
+        const spikes = 4;
+        const outerRadius = this.size;
+        const innerRadius = this.size / 2;
+        let rot = Math.PI / 2 * 3;
+        let x = 0;
+        let y = 0;
+        const step = Math.PI / spikes;
+
+        ctx.beginPath();
+        ctx.moveTo(0, -outerRadius);
+        for (let i = 0; i < spikes; i++) {
+          x = Math.cos(rot) * outerRadius;
+          y = Math.sin(rot) * outerRadius;
+          ctx.lineTo(x, y);
+          rot += step;
+
+          x = Math.cos(rot) * innerRadius;
+          y = Math.sin(rot) * innerRadius;
+          ctx.lineTo(x, y);
+          rot += step;
+        }
+        ctx.lineTo(0, -outerRadius);
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#FFF';
+      }
       ctx.restore();
     }
   }
@@ -64,25 +98,25 @@
     canvas.width = width;
     canvas.height = height;
 
-    let petals: Petal[] = [];
-    const petalCount = 50;
+    let particles: Particle[] = [];
+    const particleCount = 60;
 
-    const initPetals = () => {
-      petals = [];
-      for (let i = 0; i < petalCount; i++) {
-        petals.push(new Petal(width, height));
+    const initParticles = () => {
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle(width, height));
       }
     };
 
-    initPetals();
+    initParticles();
 
     let animationId: number;
     function animate() {
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
-      petals.forEach(petal => {
-        petal.update();
-        petal.draw(ctx);
+      particles.forEach(p => {
+        p.update();
+        p.draw(ctx);
       });
       animationId = requestAnimationFrame(animate);
     }
@@ -94,8 +128,7 @@
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      // Re-init petals on resize to update their width/height reference
-      petals.forEach(p => {
+      particles.forEach(p => {
         p.width = width;
         p.height = height;
       });
